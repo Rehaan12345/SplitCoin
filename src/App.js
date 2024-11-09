@@ -29,7 +29,7 @@ function App() {
       }}
     >
       <div className="App">
-        <h1>Bitcoin Klarna-like App</h1>
+        <h1>Splitcoin</h1>
         {!userSession ? (
           <WalletConnect />
         ) : (
