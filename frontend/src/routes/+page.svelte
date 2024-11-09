@@ -11,7 +11,7 @@
         <Register href="/">
         <svelte:fragment slot="top">
             <!-- <img class="w-8 h-8 mr-2" alt="logo" /> -->
-            Flowbite
+            SplitCoin
         </svelte:fragment>
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
             <form class="flex flex-col space-y-6" action="/">
