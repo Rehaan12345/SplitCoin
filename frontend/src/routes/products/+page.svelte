@@ -2,41 +2,38 @@
     import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     import { onMount } from "svelte";
 
-    onMount(() => {
-        fetch('https://dummyjson.com/products')
-        .then(res => res.json())
-        .then(console.log);
-    })
+    let products;
 
-  </script>
+    onMount(async () => {
+        const url = 'https://dummyjson.com/products';
+        const res = await fetch(url);
+        products = await res.json();
+        // fetch('https://dummyjson.com/products')
+        // .then(res => res.json())
+        // .then(console.log);
+        console.log(products);
+    });
+
+    
+</script>
   
-  <div class="tablewrapper">
-    <Table>
-      <TableHead>
-        <TableHeadCell>Product name</TableHeadCell>
-        <TableHeadCell>Color</TableHeadCell>
-        <TableHeadCell>Category</TableHeadCell>
+<div class="tablewrapper">
+<Table>
+    <TableHead>
+        <TableHeadCell>Title</TableHeadCell>
+        <TableHeadCell>Brand</TableHeadCell>
+        <TableHeadCell>Images</TableHeadCell>
         <TableHeadCell>Price</TableHeadCell>
-      </TableHead>
-      <TableBody tableBodyClass="divide-y">
-        <TableBodyRow>
-          <TableBodyCell>Apple MacBook Pro 17"</TableBodyCell>
-          <TableBodyCell>Sliver</TableBodyCell>
-          <TableBodyCell>Laptop</TableBodyCell>
-          <TableBodyCell>$2999</TableBodyCell>
-        </TableBodyRow>
-        <TableBodyRow>
-          <TableBodyCell>Microsoft Surface Pro</TableBodyCell>
-          <TableBodyCell>White</TableBodyCell>
-          <TableBodyCell>Laptop PC</TableBodyCell>
-          <TableBodyCell>$1999</TableBodyCell>
-        </TableBodyRow>
-        <TableBodyRow>
-          <TableBodyCell>Magic Mouse 2</TableBodyCell>
-          <TableBodyCell>Black</TableBodyCell>
-          <TableBodyCell>Accessories</TableBodyCell>
-          <TableBodyCell>$99</TableBodyCell>
-        </TableBodyRow>
-      </TableBody>
-    </Table>
-  </div>
+    </TableHead>
+    <TableBody tableBodyClass="divide-y">
+        {#each products as p}
+            <TableBodyRow>
+                <TableBodyCell>{p.title}</TableBodyCell>
+                <TableBodyCell>{p.brand}</TableBodyCell>
+                <TableBodyCell>{p.Images}</TableBodyCell>
+                <TableBodyCell>$2999</TableBodyCell>
+            </TableBodyRow>
+        {/each}
+    </TableBody>
+</Table>
+</div>

@@ -1,0 +1,22 @@
+<script>import { twMerge } from "tailwind-merge";
+export let outerDivClass = "overflow-y-auto overflow-x-hidden z-50 md:inset-0 md:h-full";
+export let innerDivClass = "relative p-4 w-full max-w-lg h-full md:h-auto";
+export let contentDivClass = "relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 md:p-8";
+</script>
+
+<div id="info-popup" tabindex="-1" class={twMerge(outerDivClass, $$props.class)}>
+  <div class={innerDivClass}>
+    <div class={contentDivClass}>
+      <slot></slot>
+    </div>
+  </div>
+</div>
+
+<!--
+@component
+[Go to docs](https://flowbite-svelte-blocks.codewithshin.com/)
+## Props
+@prop export let outerDivClass: string = 'overflow-y-auto overflow-x-hidden z-50 md:inset-0 md:h-full';
+@prop export let innerDivClass: string = 'relative p-4 w-full max-w-lg h-full md:h-auto';
+@prop export let contentDivClass: string = 'relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 md:p-8';
+-->
