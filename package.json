@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.6",
     "@stacks/connect": "^7.8.0",
     "@stacks/connect-react": "^22.5.0",
     "@stacks/network": "^7.0.0",
