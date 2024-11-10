@@ -95,7 +95,7 @@ function InstallmentModal({ open, handleClose, product, stxToUsd, userSession })
   };
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleClose} className="installmodal">
       <Box sx={{
         position: 'absolute',
         top: '50%',
@@ -108,6 +108,18 @@ function InstallmentModal({ open, handleClose, product, stxToUsd, userSession })
         borderRadius: 2,
       }}>
         <Typography variant="h6" component="h2">
+          Split Purchase for {product?.title}
+        </Typography>
+        <Typography sx={{ mt: 2 }}>
+          Total amount (including 5% charge): <div className="infobutton">${totalAmount.toFixed(2)}</div>
+        </Typography>
+        <Typography sx={{ mt: 2 }}>
+          5 installments of: <div className="infobutton">${installmentAmount.toFixed(2)}</div>
+        </Typography>
+        <Typography sx={{ mt: 2 }}>
+          BTC equivalent per installment: <div className="infobutton">{btcEquivalent.toFixed(8)} BTC</div>
+        </Typography>
+        <Button className="allbuttons" onClick={handleClose} sx={{ mt: 2 }}>Close</Button>
   Split Purchase for {product?.title}
 </Typography>
 <Typography sx={{ mt: 2 }}>

@@ -63,7 +63,38 @@ const ProductList = ({ userSession }) => {
 
     if (loading) return <p>Loading...</p>;
 
-    if (error) return <p>Error: {error}</p>;
+  return (
+    <div className="cardswrapper">
+      {products.map((p) => (
+        <div key={p.id} className="cards">
+          <CardMedia
+            sx={{ height: 140 }}
+            image={p.images[0] || 'https://via.placeholder.com/140'}
+            title={p.brand}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {p.title}
+            </Typography>
+            <Typography variant="body2">
+              {p.description}
+            </Typography>
+            <br></br>
+          </CardContent>
+          <CardActions>
+            <Button className="allbuttons" size="large" onClick={() => handleBuyClick(p)}>Buy Now for ${p.price}</Button>
+          </CardActions>
+        </div>
+      ))}
+      <InstallmentModal 
+        open={modalOpen} 
+        handleClose={() => setModalOpen(false)} 
+        product={selectedProduct}
+        btcToUsd={btcToUsd}
+      />
+    </div>
+  );
+}
 
     return (
         <div className="cardswrapper" style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>

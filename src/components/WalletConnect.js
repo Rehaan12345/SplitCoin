@@ -4,7 +4,7 @@ function WalletConnect() {
   const { doOpenAuth } = useConnect();
 
   return (
-    <button onClick={() => doOpenAuth()}>
+    <button className="allbuttons" onClick={() => doOpenAuth()}>
       Connect Wallet
     </button>
   );
