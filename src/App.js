@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Connect } from '@stacks/connect-react';
 import { AppConfig, UserSession } from '@stacks/connect';
 import { StacksMainnet, StacksTestnet } from '@stacks/transactions';
+import Typography from '@mui/material/Typography';
 
 import WalletConnect from './components/WalletConnect';
 import ProductList from './components/ProductList';
@@ -86,18 +87,33 @@ function App() {
       }}
     >
       <div className="App">
-        <h1>SplitCoin</h1>
+        <div className="titlewrapper">
+          <img className="logo" src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fsplitcoinlogo.jpg?alt=media&token=38faf2c3-6fc9-4ae3-8e02-45577d443ab0"></img>
+          <img className="logo" src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fsplitcoinmotto.jpg?alt=media&token=f885cc3f-61f7-45b7-b15c-962a77378a4c"></img>
+        </div>
+        
         {!userSession.isUserSignedIn() ? (
           <WalletConnect />
         ) : (
           <div className="user-info">
-            <p>Stacks Address: {stacksAddress}</p>
-            {bitcoinBalance !== null ? (
-              <p>Balance: {bitcoinBalance} STX</p>
-            ) : (
-              <p>Loading balance...</p>
-            )}
-            <button onClick={handleSignOut}>Sign Out</button>
+
+            <div className="balances">
+              <Typography variant="h5" component="h5">
+                <u>Stacks Address</u>: {stacksAddress}
+              </Typography>
+              
+              {bitcoinBalance !== null ? (
+                <Typography variant="h5" component="h5">
+                  <u>Balance</u>: {bitcoinBalance} STX
+                </Typography>
+              ) : (
+                <Typography variant="h5" component="h5">
+                  Loading balance...
+                </Typography>
+              )}
+            </div>
+            
+            <button className="allbuttons" onClick={handleSignOut}>Sign Out</button>
             <ProductList />
           </div>
         )}

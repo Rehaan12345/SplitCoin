@@ -20,7 +20,7 @@ function InstallmentModal({ open, handleClose, product, btcToUsd }) {
   }, [product, btcToUsd]);
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleClose} className="installmodal">
       <Box sx={{
         position: 'absolute',
         top: '50%',
@@ -35,15 +35,15 @@ function InstallmentModal({ open, handleClose, product, btcToUsd }) {
           Split Purchase for {product?.title}
         </Typography>
         <Typography sx={{ mt: 2 }}>
-          Total amount (including 5% charge): ${totalAmount.toFixed(2)}
+          Total amount (including 5% charge): <div className="infobutton">${totalAmount.toFixed(2)}</div>
         </Typography>
         <Typography sx={{ mt: 2 }}>
-          5 installments of: ${installmentAmount.toFixed(2)}
+          5 installments of: <div className="infobutton">${installmentAmount.toFixed(2)}</div>
         </Typography>
         <Typography sx={{ mt: 2 }}>
-          BTC equivalent per installment: {btcEquivalent.toFixed(8)} BTC
+          BTC equivalent per installment: <div className="infobutton">{btcEquivalent.toFixed(8)} BTC</div>
         </Typography>
-        <Button onClick={handleClose} sx={{ mt: 2 }}>Close</Button>
+        <Button className="allbuttons" onClick={handleClose} sx={{ mt: 2 }}>Close</Button>
       </Box>
     </Modal>
   );
