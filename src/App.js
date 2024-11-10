@@ -10,7 +10,7 @@ import './App.css';
 function App() {
   const [userSession, setUserSession] = useState(null);
   const [stacksAddress, setStacksAddress] = useState(null);
-  const [bitcoinBalance, setBitcoinBalance] = useState(null);
+  const [stackBalance, setStackBalance] = useState(null);
 
   useEffect(() => {
     const appConfig = new AppConfig(['store_write', 'publish_data']);
@@ -28,7 +28,8 @@ function App() {
     const userData = session.loadUserData();
     console.log("User Data:", userData);
 
-    const address = userData.profile.stxAddress.mainnet;
+    const address = userData.profile.stxAddress.testnet;
+    console.log("Testnet Address:", address);
     
     if (!address) {
       console.error('No Stacks address found');
@@ -40,10 +41,10 @@ function App() {
 
     try {
       const balance = await getStacksBalance(address);
-      setBitcoinBalance(balance);
+      setStackBalance(balance);
     } catch (error) {
       console.error("Error fetching balance:", error);
-      setBitcoinBalance(null);
+      setStackBalance(null);
     }
   };
 
@@ -65,7 +66,7 @@ function App() {
     if (userSession) {
       userSession.signUserOut();
       setStacksAddress(null);
-      setBitcoinBalance(null);
+      setStackBalance(null);
     }
   };
 
@@ -77,7 +78,7 @@ function App() {
     <Connect
       authOptions={{
         appDetails: {
-          name: 'Bitcoin Klarna-like App',
+          name: 'Splitcoin',
           icon: '/logo192.png',
         },
         redirectTo: '/',
@@ -92,13 +93,13 @@ function App() {
         ) : (
           <div className="user-info">
             <p>Stacks Address: {stacksAddress}</p>
-            {bitcoinBalance !== null ? (
-              <p>Balance: {bitcoinBalance} STX</p>
+            {stackBalance !== null ? (
+              <p>Balance: {stackBalance} STX</p>
             ) : (
               <p>Loading balance...</p>
             )}
             <button onClick={handleSignOut}>Sign Out</button>
-            <ProductList />
+            <ProductList userSession={userSession} />
           </div>
         )}
       </div>
