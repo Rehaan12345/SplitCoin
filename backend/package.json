@@ -9,6 +9,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "neon": "^2.0.0"
+    "@neondatabase/serverless": "^0.10.3",
+    "@stacks/transactions": "^7.0.0",
+    "dotenv": "^16.4.5"
   }
 }

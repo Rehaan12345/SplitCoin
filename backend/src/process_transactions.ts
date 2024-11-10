@@ -45,12 +45,14 @@ async function main() {
         `;
         transactions.forEach(async transaction => {
             const { transaction_id, user_id, total_installments, paid_installments, amount: lifetime_amount } = transaction;
-            const address = await sql`
+            const result = await sql`
                 SELECT address FROM users WHERE user_id = ${user_id}
             `;
+            const address = result[0].address;
             try {
                 const billing_amount = (lifetime_amount / total_installments) * (TRANSACTION_FEE + 1);
-                // transferTokens(address, billing_amount);
+                transferTokens(address, billing_amount);
+                console.log(address);
                 console.log(`billed address: ${address} ${billing_amount}`);
             }
             catch (err) {
