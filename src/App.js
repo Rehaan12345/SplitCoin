@@ -1,32 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Connect } from '@stacks/connect-react';
 import { AppConfig, UserSession } from '@stacks/connect';
-import { StacksMainnet, StacksTestnet, getAddressFromPrivateKey, makeSTXTokenTransfer, broadcastTransaction } from '@stacks/transactions';
+import { StacksMainnet, StacksTestnet } from '@stacks/transactions';
 
 import WalletConnect from './components/WalletConnect';
 import ProductList from './components/ProductList';
 import './App.css';
 
 function App() {
-  // Initialize network configuration
-  const networkConfig = {
-    url: 'https://stacks-node-api.testnet.stacks.co'  // Testnet URL
-  };
-
-  // Initialize app config and user session
-  const appConfig = new AppConfig(['store_write', 'publish_data']);
-  const userSession = new UserSession({ appConfig });
+  const [userSession, setUserSession] = useState(null);
   const [stacksAddress, setStacksAddress] = useState(null);
   const [bitcoinBalance, setBitcoinBalance] = useState(null);
 
-  const getUserInfo = async () => {
-    // Check if user is signed in
-    if (!userSession.isUserSignedIn()) return;
+  useEffect(() => {
+    const appConfig = new AppConfig(['store_write', 'publish_data']);
+    const session = new UserSession({ appConfig });
+    setUserSession(session);
 
-    const userData = userSession.loadUserData();
+    if (session.isUserSignedIn()) {
+      getUserInfo(session);
+    }
+  }, []);
+
+  const getUserInfo = async (session) => {
+    if (!session.isUserSignedIn()) return;
+
+    const userData = session.loadUserData();
     console.log("User Data:", userData);
 
-    const address = userData.profile.stxAddress.mainnet;
+    const address = userData.profile.stxAddress.mainnet; // Changed to testnet
     
     if (!address) {
       console.error('No Stacks address found');
@@ -37,7 +39,6 @@ function App() {
     console.log("Stacks Address:", address);
 
     try {
-      // Fetch the balance by querying the Stacks Testnet Node directly
       const balance = await getStacksBalance(address);
       setBitcoinBalance(balance);
     } catch (error) {
@@ -46,27 +47,31 @@ function App() {
     }
   };
 
-  // Function to fetch balance directly from Stacks node
   const getStacksBalance = async (address) => {
-    const url = `${networkConfig.url}/v2/accounts/${address}`;
+    const url = `https://stacks-node-api.testnet.stacks.co/v2/accounts/${address}`;
 
     const response = await fetch(url);
     const data = await response.json();
     console.log(data);
 
     if (data && data.balance) {
-      // Balance returned in microSTX, converting to STX
       return data.balance / 1_000_000;
     } else {
       throw new Error('Unable to fetch balance');
     }
   };
 
-  useEffect(() => {
-    if (userSession.isUserSignedIn()) {
-      getUserInfo();
+  const handleSignOut = () => {
+    if (userSession) {
+      userSession.signUserOut();
+      setStacksAddress(null);
+      setBitcoinBalance(null);
     }
-  }, [userSession.isUserSignedIn()]);
+  };
+
+  if (!userSession) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Connect
@@ -76,7 +81,7 @@ function App() {
           icon: '/logo192.png',
         },
         redirectTo: '/',
-        onFinish: getUserInfo,
+        onFinish: () => getUserInfo(userSession),
         userSession,
       }}
     >
@@ -92,6 +97,7 @@ function App() {
             ) : (
               <p>Loading balance...</p>
             )}
+            <button onClick={handleSignOut}>Sign Out</button>
             <ProductList />
           </div>
         )}
