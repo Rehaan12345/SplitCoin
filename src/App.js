@@ -28,7 +28,7 @@ function App() {
     const userData = session.loadUserData();
     console.log("User Data:", userData);
 
-    const address = userData.profile.stxAddress.mainnet; // Changed to testnet
+    const address = userData.profile.stxAddress.mainnet;
     
     if (!address) {
       console.error('No Stacks address found');
