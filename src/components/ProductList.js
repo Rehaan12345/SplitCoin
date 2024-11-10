@@ -5,11 +5,15 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import InstallmentModal from './InstallmentModal';
 
 function ProductList() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [btcToUsd, setBtcToUsd] = useState(0);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -31,7 +35,23 @@ function ProductList() {
     }
     
     fetchProducts();
+    fetchBtcPrice();
   }, []);
+
+  const fetchBtcPrice = async () => {
+    try {
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+      const data = await response.json();
+      setBtcToUsd(data.bitcoin.usd);
+    } catch (error) {
+      console.error('Error fetching BTC price:', error);
+    }
+  };
+
+  const handleBuyClick = (product) => {
+    setSelectedProduct(product);
+    setModalOpen(true);
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -47,7 +67,7 @@ function ProductList() {
         <Card key={p.id} sx={{ maxWidth: 345 }}>
           <CardMedia
             sx={{ height: 140 }}
-            image={p.images[0] || 'https://via.placeholder.com/140'} // Placeholder image if none available
+            image={p.images[0] || 'https://via.placeholder.com/140'}
             title={p.brand}
           />
           <CardContent>
@@ -60,10 +80,16 @@ function ProductList() {
             <br></br>
           </CardContent>
           <CardActions>
-            <Button size="large">Buy Now for ${p.price}</Button>
+            <Button size="large" onClick={() => handleBuyClick(p)}>Buy Now for ${p.price}</Button>
           </CardActions>
         </Card>
       ))}
+      <InstallmentModal 
+        open={modalOpen} 
+        handleClose={() => setModalOpen(false)} 
+        product={selectedProduct}
+        btcToUsd={btcToUsd}
+      />
     </div>
   );
 }
