@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useConnect } from '@stacks/connect-react';
 import { uintCV } from '@stacks/transactions';
-import { STACKS_TESTNET } from '@stacks/network';
+
 
 function InstallmentModal({ open, handleClose, product, stxToUsd, userSession }) {
   const [totalAmount, setTotalAmount] = useState(0);
@@ -29,19 +29,18 @@ function InstallmentModal({ open, handleClose, product, stxToUsd, userSession })
     if (!product) return;
     
     const purchaseId = Math.floor(Date.now() / 1000); // Generate unique purchaseId using timestamp
-  const userAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    const userAddress = userSession?.loadUserData().profile.stxAddress.testnet;
 
-  console.log('Creating split purchase with:', {
-    purchaseId,
-    totalAmount,
-    userAddress,
-  });
+    console.log('Creating split purchase with:', {
+      purchaseId,
+      totalAmount,
+      userAddress,
+    });
     
     try {
       await doContractCall({
-        network: STACKS_TESTNET,
-        anchorMode: 1,
-        contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+        network: 'testnet',
+        contractAddress: 'ST1V9217ADPXCY5SK9MWPTXT7C5C9XRRPBGHPRHVC',
         contractName: 'split-puchase',
         functionName: 'create-split-purchase',
         functionArgs: [
@@ -63,13 +62,12 @@ function InstallmentModal({ open, handleClose, product, stxToUsd, userSession })
 
   const payInstallment = async (purchaseId) => {
     if (!purchaseId) return;
-    const userAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    const userAddress = userSession?.loadUserData().profile.stxAddress.testnet;
     
     try {
       await doContractCall({
-        network: STACKS_TESTNET,
-        anchorMode: 1,
-        contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM' ,      
+        network: 'testnet',
+        contractAddress: 'ST1V9217ADPXCY5SK9MWPTXT7C5C9XRRPBGHPRHVC',
         contractName: 'split-puchase',
         functionName: 'pay-installment',
         functionArgs: [uintCV(purchaseId)],
@@ -87,7 +85,9 @@ function InstallmentModal({ open, handleClose, product, stxToUsd, userSession })
   };
 
   const handleBuy = async () => {
+    console.log(userSession.isUserSignedIn());
     if (!userSession.isUserSignedIn()) {
+
       alert('Please connect your wallet first');
       return;
     }
@@ -111,42 +111,30 @@ function InstallmentModal({ open, handleClose, product, stxToUsd, userSession })
           Split Purchase for {product?.title}
         </Typography>
         <Typography sx={{ mt: 2 }}>
-          Total amount (including 5% charge): <div className="infobutton">${totalAmount.toFixed(2)}</div>
+          Total amount (including 5% charge): ${(product?.price * 1.05).toFixed(2)} USD
         </Typography>
         <Typography sx={{ mt: 2 }}>
-          5 installments of: <div className="infobutton">${installmentAmount.toFixed(2)}</div>
+          Per installment charges: ${(product?.price * 1.05 / 5).toFixed(2)} USD
         </Typography>
         <Typography sx={{ mt: 2 }}>
-          BTC equivalent per installment: <div className="infobutton">{btcEquivalent.toFixed(8)} BTC</div>
+          Per installment conversion: {installmentAmount.toFixed(6)} STX
         </Typography>
-        <Button className="allbuttons" onClick={handleClose} sx={{ mt: 2 }}>Close</Button>
-  Split Purchase for {product?.title}
-</Typography>
-<Typography sx={{ mt: 2 }}>
-  Total amount (including 5% charge): ${(product?.price * 1.05).toFixed(2)} USD
-</Typography>
-<Typography sx={{ mt: 2 }}>
-  Per installment charges: ${(product?.price * 1.05 / 5).toFixed(2)} USD
-</Typography>
-<Typography sx={{ mt: 2 }}>
-  Per installment conversion: {(installmentAmount).toFixed(6)} STX
-</Typography>
-<Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-  <Button
-    variant="contained" 
-    onClick={handleBuy} 
-    sx={{ flex: 1, mr: 1 }}
-  >
-    Buy with STX
-  </Button>
-  <Button 
-    variant="outlined" 
-    onClick={handleClose} 
-    sx={{ flex: 1, ml: 1 }}
-  >
-    Close
-  </Button>
-</Box>
+        <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
+          <Button
+            variant="contained" 
+            onClick={handleBuy} 
+            sx={{ flex: 1, mr: 1 }}
+          >
+            Buy with STX
+          </Button>
+          <Button 
+            variant="outlined" 
+            onClick={handleClose} 
+            sx={{ flex: 1, ml: 1 }}
+          >
+            Close
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );

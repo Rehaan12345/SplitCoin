@@ -41,7 +41,9 @@ function App() {
     console.log("Stacks Address:", address);
 
     try {
+      console.log("waiting");
       const balance = await getStacksBalance(address);
+      console.log("found");
       setStackBalance(balance);
     } catch (error) {
       console.error("Error fetching balance:", error);
@@ -50,7 +52,7 @@ function App() {
   };
 
   const getStacksBalance = async (address) => {
-    const url = `https://stacks-node-api.testnet.stacks.co/v2/accounts/${address}`;
+    const url = `/v2/accounts/${address}`;
 
     const response = await fetch(url);
     const data = await response.json();
@@ -103,9 +105,9 @@ function App() {
                 <u>Stacks Address</u>: {stacksAddress}
               </Typography>
               
-              {bitcoinBalance !== null ? (
+              {stackBalance !== null ? (
                 <Typography variant="h5" component="h5">
-                  <u>Balance</u>: {bitcoinBalance} STX
+                  <u>Balance</u>: {stackBalance} STX
                 </Typography>
               ) : (
                 <Typography variant="h5" component="h5">
@@ -115,7 +117,7 @@ function App() {
             </div>
             
             <button className="allbuttons" onClick={handleSignOut}>Sign Out</button>
-            <ProductList />
+            <ProductList userSession={userSession} />
           </div>
         )}
       </div>
